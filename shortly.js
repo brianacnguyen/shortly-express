@@ -25,19 +25,34 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', 
 function(req, res) {
+  if(//req of a login token )
   res.render('index');
+else {
+  //redirect to login 
+  //use res.redirect
+}
 });
 
 app.get('/create', 
 function(req, res) {
+  if(//req of a login token )
   res.render('index');
+else {
+  //redirect to login 
+  //use res.redirect
+}
 });
 
 app.get('/links', 
 function(req, res) {
+  if(//req of a login token )
   Links.reset().fetch().then(function(links) {
     res.send(200, links.models);
   });
+else {
+  //redirect to login 
+  //use res.redirect
+}
 });
 
 app.post('/links', 
