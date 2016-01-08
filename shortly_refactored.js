@@ -96,13 +96,13 @@ app.get('/signup', function (req, res) {
       res.redirect('/login');
     }
     else { 
-      bcrypt.compare(password, user.get('password'), function(err, matched){
-        if(matched){
-          util.createSession(req, res, user); 
-        }else{
+      user.comparePassword(password, function (matched) {
+        if (matched) {
+          util.createSession(req, res, user);
+        } else {
           res.redirect('/login');
         }
-      });
+      })
     }
   });
  });
@@ -111,15 +111,13 @@ app.post('/signup', function (req,res) {
   var password = req.body.password;
   new User({ username: username }).fetch().then(function(user){
     if (!user) {
-      //create account
-      bcrypt.hash(password, null, null, function(err, hash){
-        Users.create({
-          username: username,
-          password: hash
-        }).then(function(user){
-          util.createSession(req, res, user);
-        });
+      var newUser = new User({
+        username: username,
+        password: password
       });
+      newUser.save().then(function(savedUser){
+        util.createSession(req, res, savedUser);
+      })
     }
     else {
       console.log('Pick a different username');
